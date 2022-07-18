@@ -15,6 +15,12 @@
 	<description>Project related to Payments</description>
 	<properties>
 		<java.version>1.8</java.version>
+		<swagger.annotations>1.6.1</swagger.annotations>
+		<javax.validation>2.0.1.Final</javax.validation>
+		<jackson.databind.nullable>0.2.1</jackson.databind.nullable>
+		<springfox.core>3.0.0</springfox.core>
+		<org.mapstruct>1.4.2.Final</org.mapstruct>
+		<openapi.generator.maven.plugin>5.0.0</openapi.generator.maven.plugin>
 	</properties>
 	<dependencies>
 		<dependency>
@@ -46,6 +52,30 @@
 			<artifactId>spring-boot-starter-test</artifactId>
 			<scope>test</scope>
 		</dependency>
+		<dependency>
+			<groupId>org.modelmapper</groupId>
+			<artifactId>modelmapper</artifactId>
+			<version>2.4.4</version>
+		</dependency>
+		<dependency>
+			<groupId>org.springframework.boot</groupId>
+			<artifactId>spring-boot-starter-validation</artifactId>
+		</dependency>
+		<dependency>
+			<groupId>io.swagger</groupId>
+			<artifactId>swagger-annotations</artifactId>
+			<version>1.6.2</version>
+		</dependency>
+		<dependency>
+			<groupId>org.openapitools</groupId>
+			<artifactId>jackson-databind-nullable</artifactId>
+			<version>0.2.1</version>
+		</dependency>
+		<dependency>
+			<groupId>io.springfox</groupId>
+			<artifactId>springfox-core</artifactId>
+			<version>3.0.0</version>
+		</dependency>
 	</dependencies>
 
 	<build>
@@ -62,6 +92,38 @@
 					</excludes>
 				</configuration>
 			</plugin>
+			<plugin>
+				<groupId>org.openapitools</groupId>
+				<artifactId>openapi-generator-maven-plugin</artifactId>
+				<version>${openapi.generator.maven.plugin}</version>
+				<executions>
+					<execution>
+						<id>generate-spring-server</id>
+						<goals>
+							<goal>generate</goal>
+						</goals>
+						<configuration>
+							<inputSpec>${project.basedir}/src/main/resources/apispec/paymentContractOpenapi.yaml</inputSpec>
+							<output>${project.build.directory}/generated-sources</output>
+							<generatorName>spring</generatorName>
+							<addCompileSourceRoot>true</addCompileSourceRoot>
+							<modelPackage>${project.groupId}.model</modelPackage>
+							<apiPackage>${project.groupId}.api</apiPackage>
+							<packageName>${project.groupId}</packageName>
+							<supportingFilesToGenerate>ApiUtil.java</supportingFilesToGenerate>
+							<configOptions>
+								<dateLibrary>java8</dateLibrary>
+								<sourceFolder>swagger</sourceFolder>
+								<interfaceOnly>true</interfaceOnly>
+								<delegatePattern>false</delegatePattern>
+								<java8>true</java8>
+							</configOptions>
+
+						</configuration>
+					</execution>
+				</executions>
+			</plugin>
+
 		</plugins>
 	</build>
 

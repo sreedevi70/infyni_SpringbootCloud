@@ -1,0 +1,53 @@
+package org.application.controller;
+
+import io.swagger.annotations.ApiParam;
+import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
+import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
+import org.springframework.web.bind.annotation.RequestBody;
+import org.springframework.web.bind.annotation.RequestHeader;
+import org.springframework.web.bind.annotation.RestController;
+import org.application.service.impl.PaymentService;
+import org.infyniCode.api.PaymentApi;
+import org.infyniCode.model.PaymentResponse;
+import org.infyniCode.model.SuccessResponse;
+
+import javax.validation.Valid;
+import java.util.List;
+import java.util.UUID;
+
+@Slf4j
+@RestController
+@RequiredArgsConstructor
+public class PaymentApiController implements PaymentApi {
+
+    private final PaymentService paymentService;
+
+    @Override
+    public ResponseEntity<SuccessResponse> makePayment(PaymentResponse paymentResponse) {
+        return new ResponseEntity<>(paymentService.createPayment(paymentResponse), HttpStatus.CREATED);
+    }
+
+    @Override
+    public ResponseEntity<List<SuccessResponse>> deletePayment(UUID paymentId) {
+        return new ResponseEntity<>(HttpStatus.NOT_IMPLEMENTED);
+    }
+
+    @Override
+    public ResponseEntity<List<PaymentResponse>> getAllPayments() {
+        return new ResponseEntity<>(paymentService.getAllPayments(),HttpStatus.OK);
+    }
+
+    @Override
+    public ResponseEntity<PaymentResponse> getPayment(String paymentId) {
+        return new ResponseEntity<>(paymentService.getPayment(paymentId),HttpStatus.OK);
+    }
+
+    @Override
+    public ResponseEntity<List<SuccessResponse>> updatePayment(@ApiParam(value = "", required = true) @RequestHeader(value = "paymentId", required = true) UUID paymentId, @ApiParam(value = "To Update Payment Info", required = true) @Valid @RequestBody PaymentResponse paymentResponse) {
+        return new ResponseEntity<>(HttpStatus.NOT_IMPLEMENTED);
+
+    }
+}
+

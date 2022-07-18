@@ -1,0 +1,225 @@
+openapi: 3.0.0
+info:
+  title: Payment Service
+  description: Payment Service Operation
+  contact:
+    email: rathorvijay529@gmail.com
+  license:
+    name: Apache 2.0
+    url: https://swagger.io/docs/specification/
+  version: 1.0.0
+tags:
+  - name: Payment API
+    description: payment service API
+paths:
+  /payment:
+    post:
+      tags:
+        - Payment API
+      summary: Creating the Payment
+      description: Entering payment details
+      operationId: createPayment
+      requestBody:
+        description: Payload for creating payment
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/PaymentResponse'
+      responses:
+        "201":
+          description: All Orders
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/SuccessResponse'
+        "400":
+          description: Request is not correct.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+        "405":
+          description: Method not allowed
+        "415":
+          description: Unsupported media type
+        "404":
+          description: Endpoint is not available.
+        "500":
+          description: Something went wrong.
+  /payment/all:
+    get:
+      summary: Getting all Payments
+      description: Listing all the Payments to know about metadata.
+      operationId: getAllPayments
+      tags:
+        - Payment API
+      responses:
+        "200":
+          description: All Payments
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/PaymentResponse'
+
+        "404":
+          description: Endpoint is not available.
+        "500":
+          description: Something went wrong.
+  /payment/{paymentId}:
+    get:
+      summary: Returns payment details by PaymentId.
+      description: Getting the specific payment based on PaymentId.
+      operationId: getPayment
+      tags:
+        - Payment API
+      parameters:
+        - name: paymentId
+          in: path
+          required: true
+          description: Parameter description in CommonMark or HTML.
+          schema:
+            type : string
+      responses:
+        "200":
+          description: Single Order
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/PaymentResponse'
+        "400":
+          description: Request is not correct.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+        "404":
+          description: Endpoint is not available.
+        "500":
+          description: Something went wrong.
+
+  /payment/update:
+    put:
+      summary: Updating the Payment.
+      description: Updating payment details  based on PaymentId and updated info.
+      operationId: updatePayment
+      tags:
+        - Payment API
+      requestBody:
+        description: To Update Payment Info
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/PaymentResponse'
+      parameters:
+        - in: header
+          name: paymentId
+          schema:
+            type: string
+            format: uuid
+          required: true
+      responses:
+        "200":
+          description: Single Payment
+          content:
+            application/json:
+              schema:
+                items:
+                  $ref: '#/components/schemas/SuccessResponse'
+        "400":
+          description: Request is not correct.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+        "404":
+          description: Endpoint is not available.
+        "500":
+          description: Something went wrong.
+  /payment/cancel:
+    delete:
+      summary: Cancelling the Payment.
+      description: Cancelling Payment  based on PaymentId .
+      operationId: deletePayment
+      tags:
+        - Payment API
+      parameters:
+        - in: header
+          name: paymentId
+          schema:
+            type: string
+            format: uuid
+          required: true
+      responses:
+        "200":
+          description: Single Payment
+          content:
+            application/json:
+              schema:
+                items:
+                  $ref: '#/components/schemas/SuccessResponse'
+        "400":
+          description: Request is not correct.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+        "404":
+          description: Endpoint is not available.
+        "500":
+          description: Something went wrong.
+
+components:
+  schemas:
+    PaymentResponse:
+      required:
+        - id
+        - amount
+        - paymentDate
+      type:
+        object
+      properties:
+        id:
+          type: integer
+          example: 20
+        amount:
+          type: double
+          example: 1000.00
+        paymentDate:
+          type: date
+          example: 03/08/2020
+
+    SuccessResponse:
+      type:
+        object
+      properties:
+        message:
+          type: string
+          example: Payment done
+        code:
+          type: integer
+          example: 20
+        key:
+          type: object
+          example: test key
+        keyType:
+          type: string
+          example: paymentId
+    ErrorResponse:
+      type:
+        object
+      properties:
+        message:
+          type: string
+          example: Test Message
+        code:
+          type: string
+          example: 2000XXXXYZ
+        errors:
+          additionalProperties: {
+            example: test message
+          }
+
